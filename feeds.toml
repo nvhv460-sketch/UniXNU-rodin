@@ -13,15 +13,9 @@ commit = "1e38ac7b45376680024d5da1217a9d6d7d463215"
 # 你把驱动 fork/复制进本仓库 drivers/ 后，按同样格式加 [[source]]，
 # name = "NativeMtkUfs", kind = "driver", path = "drivers/NativeMtkUfs"。
 
-# xnu 参考源：woaphone 的 xnu-mtk（含 MTK 平台改动，分支 rothko）。
-# TODO: 一旦你的 XNU 改动与 rothko 分道，fork 成自己的分支并更新 pin。
-[[source]]
-name = "xnu"
-kind = "refer"
-git = "https://github.com/woaphone/xnu-mtk.git"
-ref = "rothko"
-commit = "fd4edc747395525a914987bb88f063b5e549ecc7"
-darwin = "23.6.0"
-version = "10063.141.1"
-driverkit_tag = "xnu-10063.121.3"
-trustcache_tag = "xnu-8796.101.5"
+# xnu 参考源：不在此覆盖 —— 主仓库 feeds.toml 已定义 xnu 为
+# apple-oss-distributions/xnu @ d8b80295（OS profile 要求的版本）。
+# rothko 曾在设备 feeds.toml 里把 xnu 指到 woaphone/xnu-mtk，
+# 导致解析器拿 Apple 提交号去 xnu-mtk 找 → "not our ref"（已踩坑）。
+# TODO: 等我们 fork xnu 做自己的 MTK 修改后，在这里钉自己 fork 的 commit，
+# 并保证该 commit 存在于 fork 中（或调整 OS profile 的 xnu_revision）。
