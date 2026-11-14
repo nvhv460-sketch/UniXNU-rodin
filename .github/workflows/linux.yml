@@ -164,6 +164,19 @@ jobs:
           path: uefi/Build/rodinPkg/**/FV/SILICIUM_UEFI.fd
           retention-days: 14
 
+      - name: Upload boot image
+        # The boot image and the payload volume embed the prelinked Apple kernel,
+        # so this artifact is for the device owner only: download it, then delete
+        # the run (as the official packaging workflow says).
+        if: success() && contains(inputs.steps, 'full')
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodin-boot-${{ github.run_attempt }}
+          path: |
+            unixnu/out/rodin/**/boot/boot.img
+            unixnu/out/rodin/**/payload/payload.img
+          retention-days: 14
+
       - name: Upload kernel macho
         if: success() && (contains(inputs.steps, 'kernel') || contains(inputs.steps, 'full'))
         uses: actions/upload-artifact@v4
