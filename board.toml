@@ -42,8 +42,12 @@ fetch = ["KernelCache", "DeviceTree", "StaticTrustCache", "Cryptex1,SystemTrustC
 # super 止于 LBA 3407871；scatter 给出 userdata 起始字节 0x354300000 → 4K LBA 0xD50C0。
 # last_lba 取决于存储容量（256G/512G 两版本，MI_FFU 三个厂商固件），装机时以实际 GPT 为准。
 [userdata]
-first_lba = 0xD50C0
-# last_lba = TODO  # 256G 版 / 512G 版不同；用 unpack 后真机 GPT 的 userdata 区间填
+# 真机 GPT 实测（2026-11-14，adb + root 读 /sys/block/sdc，256GB Micron MT256GBEAX4U4001）：
+# userdata = sdc92，起点 512B 扇区 27924480 → 4K LBA 0x354300（字节 0x354300000，与 scatter 吻合），
+# 大小 488613824×512B → 61,076,728 个 4K LBA；终点 LBA 0x3D937F7。
+# sdc 总容量 64,571,392 个 4K LBA；userdata 之后是 flashinfo（sdc93，16 MiB）与 GPT 备份。
+first_lba = 0x354300
+last_lba = 0x3D937F7
 lba_bytes = 4096
 windows = [
   { name = "OS", component = "OS" },
@@ -75,6 +79,11 @@ archives = [
 ]
 
 # ---- Donor 内核缓存的 prelink 契约（与 rothko 同一 21H461 kernelcache，可复用）----
+# CI 内核已验证（run 43558876121 success，kernel.macho sha256 0baea3b4...）。
+# ---- 真机实测 2026-11-14 ----
+# hwcode 0x6899（efuse 0x044 与 dmesg "get chipid 0x6899:0x8a00:0xca00:0x0"）；
+# DRAM 0x40000000 + 0x300000000 单段（/proc/device-tree/memory@40000000/reg）；
+# UFS HCI 0x112b0000 真机确认（/sys/devices/platform/soc/112b0000.ufshci）。
 [kernel.prelink]
 tool = "kits/XnuPrelink/emit_prelink.py"
 kernel = "build/xnu/ios-obj/DEVELOPMENT_ARM64_BCM2837/mach.development.bcm2837.unstripped.noctf"
@@ -145,7 +154,7 @@ kernel_args = [
 # TODO: ADT 生成脚本需按 rodin 硬件写一份（参考 rothko 的 scripts/make-rothko-adt.py）
 tool = "scripts/make-rodin-adt.py"
 soc = "rodin"
-chip_id = "0x8011"
+chip_id = "0x6899"  # MT6899 hwcode：efuse 0x044 + dmesg "get chipid 0x6899:..."（2026-11-14 真机实测）
 # TODO: owned_memory = 目标让 XNU 独占的内存大小；12 GiB 版建议 0x200000000（8 GiB）起步
 owned_memory_size = "0x200000000"
 # TODO: root_match 卷 UUID —— 安装/userdata 步骤后从 userdata-root.json 填入

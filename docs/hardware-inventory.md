@@ -13,7 +13,13 @@
 - [x] 内存量版本：**12 GiB**（用户确认）；DRAM 类型待 dram_para/lk（LPDDR5X）
 - [x] CI 内核构建打通：defconfig/feeds/补丁链/归档全通过，kernel.macho 产出（sha256 0baea3b4b1f997296ab262921237a50a9abb59a28a298c777b718a09760e9944，run 43557370169）
 - [x] sheng-platform-power 补丁依赖：mt6989 soc series 为空，由设备 series 补（board.toml 把 device 排在 os 前）
-- [x] 存储版本：**256 GB**（MI_FFU 里对应 Micron_0207_256G 或 SS_V8_256GB，以真机 UFS 识别为准）；last_lba 待真机 GPT
+- [x] 存储版本：**256 GB**（真机实测 UFS = Micron **MT256GBEAX4U4001** rev 0213，UFS4.0）
+- [x] userdata 几何（真机 GPT 2026-11-14）：4K LBA **0x354300 .. 0x3D937F7**；sdc 总计 64,571,392 LBA；flashinfo(sdc93) 在其后
+- [x] MT6899 hwcode：**0x6899**（efuse 0x044 + dmesg `get chipid 0x6899:0x8a00:0xca00:0x0`）
+- [x] DRAM：**0x40000000 + 0x300000000 单段连续 12 GiB**（/proc/device-tree/memory@40000000/reg）
+- [x] UFS HCI 基址真机确认：**0x112b0000**（/sys/devices/platform/soc/112b0000.ufshci）
+- [x] efuse mtk-devinfo0 可 root 直读（1280B）；0x30–0x3F 为 16B 随机 blob（可作 unique-chip-id 种子来源）
+- [x] 内核设备树完整可读：/proc/device-tree（444 节点级结构，root 直读，比解析 vendor_boot 更权威）
 - [x] fastboot 包结构齐全；bootloader 解锁状态与 fastboot boot 待实测（**先备份全部分区**）
 
 ## 1. CPU / 中断

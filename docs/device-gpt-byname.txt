@@ -1,0 +1,194 @@
+total 0
+drwxr-xr-x 2 root root 2000 2026-11-14 13:10 .
+drwxr-xr-x 6 root root 4220 2026-11-14 13:10 ..
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 apusys_a -> /dev/block/sdc34
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 apusys_b -> /dev/block/sdc67
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 audio_dsp_a -> /dev/block/sdc25
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 audio_dsp_b -> /dev/block/sdc58
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 blackbox -> /dev/block/sdc91
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 boot_a -> /dev/block/sdc38
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 boot_b -> /dev/block/sdc71
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 boot_para -> /dev/block/sdc53
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 ccu_a -> /dev/block/sdc29
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 ccu_b -> /dev/block/sdc62
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 charger -> /dev/block/sdc89
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 connsys_bt_a -> /dev/block/sdc43
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 connsys_bt_b -> /dev/block/sdc74
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 connsys_gnss_a -> /dev/block/sdc45
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 connsys_gnss_b -> /dev/block/sdc76
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 connsys_wifi_a -> /dev/block/sdc44
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 connsys_wifi_b -> /dev/block/sdc75
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 countrycode_a -> /dev/block/sdc86
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 countrycode_b -> /dev/block/sdc87
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 dpm_a -> /dev/block/sdc27
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 dpm_b -> /dev/block/sdc60
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 dram_para -> /dev/block/sdc54
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 dtbo_a -> /dev/block/sdc41
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 dtbo_b -> /dev/block/sdc77
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 efuse -> /dev/block/sdc51
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 expdb -> /dev/block/sdc4
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 ffu -> /dev/block/sdc84
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 flashinfo -> /dev/block/sdc93
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 frp -> /dev/block/sdc5
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 gpueb_a -> /dev/block/sdc33
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 gpueb_b -> /dev/block/sdc66
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 gsort -> /dev/block/sdc82
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 gz_a -> /dev/block/sdc36
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 gz_b -> /dev/block/sdc69
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 init_boot_a -> /dev/block/sdc40
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 init_boot_b -> /dev/block/sdc73
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 lk_a -> /dev/block/sdc37
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 lk_b -> /dev/block/sdc70
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 logo_a -> /dev/block/sdc48
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 logo_b -> /dev/block/sdc80
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 mcf_ota_a -> /dev/block/sdc24
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 mcf_ota_b -> /dev/block/sdc57
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 mcupm_a -> /dev/block/sdc32
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 mcupm_b -> /dev/block/sdc65
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 md_sec -> /dev/block/sdc8
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 mem -> /dev/block/sdc85
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 metadata -> /dev/block/sdc16
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 misc -> /dev/block/sdc1
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 modem_a -> /dev/block/sdc22
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 modem_b -> /dev/block/sdc55
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 mvpu_algo_a -> /dev/block/sdc35
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 mvpu_algo_b -> /dev/block/sdc68
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 nvcfg -> /dev/block/sdc6
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 nvdata -> /dev/block/sdc7
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 nvram -> /dev/block/sdc52
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 oops -> /dev/block/sdc88
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 otp -> /dev/block/sdc20
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 para -> /dev/block/sdc3
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 persist -> /dev/block/sdc9
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 pi_img_a -> /dev/block/sdc26
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 pi_img_b -> /dev/block/sdc59
+lrwxrwxrwx 1 root root   22 2026-11-14 13:10 preloader_raw_a -> /dev/block/mapper/pl_a
+lrwxrwxrwx 1 root root   22 2026-11-14 13:10 preloader_raw_b -> /dev/block/mapper/pl_b
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 proinfo -> /dev/block/sdc50
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 protect1 -> /dev/block/sdc17
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 protect2 -> /dev/block/sdc18
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 pstore -> /dev/block/sdc21
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 pvmfw_a -> /dev/block/sdc46
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 pvmfw_b -> /dev/block/sdc78
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 rescue -> /dev/block/sdc90
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 rotfw_a -> /dev/block/sdc47
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 rotfw_b -> /dev/block/sdc79
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 scp_a -> /dev/block/sdc28
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 scp_b -> /dev/block/sdc61
+lrwxrwxrwx 1 root root   14 2026-11-14 13:10 sda -> /dev/block/sda
+lrwxrwxrwx 1 root root   14 2026-11-14 13:10 sdb -> /dev/block/sdb
+lrwxrwxrwx 1 root root   14 2026-11-14 13:10 sdc -> /dev/block/sdc
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 sec1 -> /dev/block/sdc49
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 seccfg -> /dev/block/sdc19
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 spmfw_a -> /dev/block/sdc23
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 spmfw_b -> /dev/block/sdc56
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 sspm_a -> /dev/block/sdc31
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 sspm_b -> /dev/block/sdc64
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 super -> /dev/block/sdc83
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 tee_a -> /dev/block/sdc42
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 tee_b -> /dev/block/sdc81
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 userdata -> /dev/block/sdc92
+lrwxrwxrwx 1 root root   15 2026-11-14 13:10 vb -> /dev/block/sdc2
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vbmeta_a -> /dev/block/sdc10
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vbmeta_b -> /dev/block/sdc13
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vbmeta_system_a -> /dev/block/sdc11
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vbmeta_system_b -> /dev/block/sdc14
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vbmeta_vendor_a -> /dev/block/sdc12
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vbmeta_vendor_b -> /dev/block/sdc15
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vcp_a -> /dev/block/sdc30
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vcp_b -> /dev/block/sdc63
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vendor_boot_a -> /dev/block/sdc39
+lrwxrwxrwx 1 root root   16 2026-11-14 13:10 vendor_boot_b -> /dev/block/sdc72
+sdc1 start=64 size512=8192
+sdc10 start=625728 size512=16384
+sdc11 start=642112 size512=16384
+sdc12 start=658496 size512=16384
+sdc13 start=674880 size512=16384
+sdc14 start=691264 size512=16384
+sdc15 start=707648 size512=16384
+sdc16 start=724032 size512=144320
+sdc17 start=868352 size512=32768
+sdc18 start=901120 size512=32768
+sdc19 start=933888 size512=16384
+sdc2 start=8256 size512=8192
+sdc20 start=950272 size512=88064
+sdc21 start=1038336 size512=272384
+sdc22 start=1310720 size512=409600
+sdc23 start=1720320 size512=2048
+sdc24 start=1722368 size512=65536
+sdc25 start=1787904 size512=49152
+sdc26 start=1837056 size512=4096
+sdc27 start=1841152 size512=8192
+sdc28 start=1849344 size512=32768
+sdc29 start=1882112 size512=8192
+sdc3 start=16448 size512=1024
+sdc30 start=1890304 size512=12288
+sdc31 start=1902592 size512=4096
+sdc32 start=1906688 size512=4096
+sdc33 start=1910784 size512=4096
+sdc34 start=1914880 size512=8192
+sdc35 start=1923072 size512=131072
+sdc36 start=2054144 size512=65536
+sdc37 start=2119680 size512=32768
+sdc38 start=2152448 size512=131072
+sdc39 start=2283520 size512=131072
+sdc4 start=17472 size512=262144
+sdc40 start=2414592 size512=16384
+sdc41 start=2430976 size512=16384
+sdc42 start=2447360 size512=12288
+sdc43 start=2459648 size512=16384
+sdc44 start=2476032 size512=16384
+sdc45 start=2492416 size512=16384
+sdc46 start=2508800 size512=4096
+sdc47 start=2512896 size512=16384
+sdc48 start=2529280 size512=108544
+sdc49 start=2637824 size512=4096
+sdc5 start=279616 size512=2048
+sdc50 start=2641920 size512=6144
+sdc51 start=2648064 size512=1024
+sdc52 start=2649088 size512=131072
+sdc53 start=2780160 size512=2048
+sdc54 start=2782208 size512=52224
+sdc55 start=2834432 size512=409600
+sdc56 start=3244032 size512=2048
+sdc57 start=3246080 size512=65536
+sdc58 start=3311616 size512=49152
+sdc59 start=3360768 size512=4096
+sdc6 start=281664 size512=65536
+sdc60 start=3364864 size512=8192
+sdc61 start=3373056 size512=32768
+sdc62 start=3405824 size512=8192
+sdc63 start=3414016 size512=12288
+sdc64 start=3426304 size512=4096
+sdc65 start=3430400 size512=4096
+sdc66 start=3434496 size512=4096
+sdc67 start=3438592 size512=8192
+sdc68 start=3446784 size512=131072
+sdc69 start=3577856 size512=65536
+sdc7 start=347200 size512=163840
+sdc70 start=3643392 size512=32768
+sdc71 start=3676160 size512=131072
+sdc72 start=3807232 size512=131072
+sdc73 start=3938304 size512=16384
+sdc74 start=3954688 size512=16384
+sdc75 start=3971072 size512=16384
+sdc76 start=3987456 size512=16384
+sdc77 start=4003840 size512=16384
+sdc78 start=4020224 size512=4096
+sdc79 start=4024320 size512=16384
+sdc8 start=511040 size512=16384
+sdc80 start=4040704 size512=98304
+sdc81 start=4139008 size512=12288
+sdc82 start=4151296 size512=43008
+sdc83 start=4194304 size512=23068672
+sdc84 start=27262976 size512=16384
+sdc85 start=27279360 size512=8192
+sdc86 start=27287552 size512=2048
+sdc87 start=27289600 size512=2048
+sdc88 start=27291648 size512=32768
+sdc89 start=27324416 size512=2048
+sdc9 start=527424 size512=98304
+sdc90 start=27326464 size512=262144
+sdc91 start=27588608 size512=335872
+sdc92 start=27924480 size512=488613824
+sdc93 start=516538304 size512=32768
