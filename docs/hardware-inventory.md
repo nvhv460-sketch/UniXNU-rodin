@@ -24,7 +24,7 @@
 
 ## 1. CPU / 中断
 - [x] CPU 拓扑：8 核，三簇 4+3+1，capacity 0x400/0x3bb/0x3cb，MPIDR 0x0..0x700，PSCI（来源：vendor_boot DTB /cpus）
-- [x] 中断控制器：GIC500 @0xc000000（0x400000），CPU interface @0xc400000（来源：vendor_boot DTB）
+- [x] 中断控制器：GICv3 **dist 0x0C400000/0x40000 + redist 0x0C440000/0x200000**（真机 DT 实测；早前误记为 0xc000000，以真机 /proc/device-tree 与 vendor_boot DTB interrupt-controller@c400000 为准，与 rothko/MT6989 相同）
 - [x] 计时器：arm,armv8-timer，13 MHz（0x00c65d40），4 PPI（来源：/timer 节点）
 - [x] PSCI：enable-method=psci，idle-state 参数链已提取（来源：/cpus/idle-states）
 - [ ] FDVFS / 频率投票接口（stock DTS 的 CPU vote 表 —— 待从 super.img vendor 提取）
