@@ -25,17 +25,31 @@ evidence = []
 
 [[area]]
 id = "firmware"
-status = "host-verified"
+status = "implemented"
 components = []
-paths = ["proprietary-files.txt", "board.toml", "Platforms/Xiaomi/rodinPkg/", "Resources/Configs/rodin.toml"]
+paths = ["proprietary-files.txt", "board.toml", ".github/workflows/**", "docs/device-proc-iomem.txt", "docs/hardware-inventory.md"]
 inputs = ["官方线刷包、UEFI fork（nvhv460-sketch/Silicium-Rothko，已 add rodinPkg）、lk/preloader 日志"]
 configuration = ["external_repository=https://github.com/nvhv460-sketch/Silicium-Rothko.git; config=rodin; dsc=Platforms/Xiaomi/rodinPkg/rodin.dsc; fd=Build/rodinPkg/{target}_CLANGPDB/FV/SILICIUM_UEFI.fd; defines ENABLE_SECUREBOOT=0 DEVICE_MODEL=0 MEMORY_PROTECTION=TRUE SHIP_MODE=FALSE"]
-procedure = ["TODO: GitHub Actions Linux full build (steps=full, uefi_repository=nvhv460-sketch/Silicium-Rothko) 产出生成 SILICIUM_UEFI.fd；再 fastboot boot"]
-findings = ["MT6899 SoC mmio 全部与 rothko (MT6989) 一致：GIC 0x0C400000/0x0C440000，watchdog 0x1C00B000，pinctrl 0x10005000，PMIF 0x1CC04000，UFS PHY/HCI 0x112A0000/0x112B0000；DSC0@0x14206000、DSI0@0x1420a000、MUTEX/DISPSYS/MMSYS/OVLSYS 地址均相同。面板 o10_42_02_0a_dsc_vdo_lcm_drv，1220x2712 stride 1248，32bpp；LK 帧缓冲 atag,videolfb 在 /proc/device-tree/chosen = 0xFCC20000/0x33D0000，真机实测验证。RodinHighMemDxe 使用 rodin 实际 12GiB 单段布局 [0x100100000,~3GiB] + [0x1C0000000,~5.32GiB]。MemoryMapLib v1 保守映射低段 124MiB 固件区+所有 MMIO+LK handoff 结构（DTB 0x47C80000、initrd 0x66F00000、Display Reserved 0xFCC20000）。高段至 0xC0000000 从 live iomem 转录，上方留白待首次启动确认。Display driver fallback 改为 0xFCC20000；DSI mode VDO（非 rothko CMD），现有 mode-check 路径自动跳过 command-mode push，GOP 通过 LK framebuffer 发布。RodinWatchdogDxe/MtkUfsDxe/GpioImplLib 无需改动。"]
+procedure = ["TODO: GitHub Actions Linux full build (steps=full, uefi_repository=nvhv460-sketch/Silicium-Rothko) 产出 SILICIUM_UEFI.fd；再 fastboot boot"]
+findings = ["MT6899 SoC mmio 全部与 rothko (MT6989) 一致：GIC 0x0C400000/0x0C440000，watchdog 0x1C00B000，pinctrl 0x10005000，PMIF 0x1CC04000，UFS PHY/HCI 0x112A0000/0x112B0000；DSC0@0x14206000、DSI0@0x1420a000、MUTEX/DISPSYS/MMSYS/OVLSYS 地址均相同。面板 o10_42_02_0a_dsc_vdo_lcm_drv，1220x2712 stride 1248，32bpp；LK 帧缓冲 atag,videolfb = 0xFCC20000/0x33D0000，真机实测验证。RodinHighMemDxe 使用 rodin 实际 12GiB 单段布局。MemoryMapLib v1 保守映射低段 124MiB 固件区+所有 MMIO+LK handoff 结构（DTB 0x47C80000、initrd 0x66F00000、Display Reserved 0xFCC20000）。高段至 0xC0000000 从 live iomem 转录。DSI mode 为 VDO（非 rothko CMD），现有 mode-check 路径自动跳过 command-mode push，GOP 通过 LK framebuffer 发布。"]
 completion = ["固件构建通过，进入 DarwinBoot，发布 framebuffer，保持内存契约"]
 limits = ["首次 fastboot boot 尚未执行；高段 0xC0..0x33FF 内存未验证；payload trust cache 待填充"]
 next_action = ["触发 github workflow 'Linux full build' steps=full，下载 .fd 产物，fastboot boot"]
-evidence = ["docs/device-proc-iomem.txt (live kernel /proc/iomem)，/proc/device-tree/chosen/atag,videolfb-*，/tmp/rodin.dts reserved-memory"]
+
+[[area.evidence]]
+kind = "source"
+reference = "docs/device-proc-iomem.txt"
+result = "真机 /proc/iomem 全量（2026-11-14）：System RAM/保留区用于 MemoryMapLib v1 自由区与保留区转录，以及 RodinHighMemDxe 高段范围"
+
+[[area.evidence]]
+kind = "source"
+reference = "docs/hardware-inventory.md"
+result = "GIC 0x0C400000/0x0C440000、watchdog 0x1C00B000、UFS 0x112A/0x112B0000、面板 o10_42_02_0a_dsc_vdo 与 rothko 完全一致；hwcode 0x6899、DRAM 12GiB 单段"
+
+[[area.evidence]]
+kind = "source"
+reference = "board.toml"
+result = "[firmware] external_repository/config/dsc/fd 指向 nvhv460-sketch/Silicium-Rothko + rodinPkg，CLANGPDB 输出路径与 UniXNU firmware.py 硬编码工具链一致"
 
 [[area]]
 id = "cpu"
