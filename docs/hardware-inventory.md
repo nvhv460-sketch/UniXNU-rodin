@@ -10,7 +10,8 @@
 ## 0. 设备身份
 - [x] 官方代号：**rodin**（来源：工厂包 preloader_rodin.bin、scatter project 字段、相机 sensor 名 rodin*）
 - [x] SoC：**MT6899 / 天玑 8400-Ultra**（来源：scatter platform 字段）
-- [ ] 内存量版本（12 GiB / 16 GiB），DRAM 类型（dram_para 分区 / lk mblock）
+- [x] 内存量版本：**12 GiB**（用户确认）；DRAM 类型待 dram_para/lk（LPDDR5X）
+- [x] 存储版本：**256 GB**（MI_FFU 里对应 Micron_0207_256G 或 SS_V8_256GB，以真机 UFS 识别为准）；last_lba 待真机 GPT
 - [x] fastboot 包结构齐全；bootloader 解锁状态与 fastboot boot 待实测（**先备份全部分区**）
 
 ## 1. CPU / 中断

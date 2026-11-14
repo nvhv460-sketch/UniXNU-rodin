@@ -117,7 +117,7 @@ volume = "UNIXNU"
 size_mib = 56
 loader = "firmware"
 title = "rodin UniXNU"
-# TODO: rodin 有 12/16 GiB 两版本；以真机 lk mblock 日志为准（0x300000000 = 12 GiB）
+# 已确认：本机 12 GiB RAM（用户确认）；存储 256 GB（SS_V8 或 Micron 256G，以真机识别为准）
 dram_size = "0x300000000"
 panic_screen = false
 # TODO: trust cache hash —— 首次 payload 构建后由输出/报告填入，或使用 --owner-trust-cache
