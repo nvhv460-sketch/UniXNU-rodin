@@ -111,22 +111,23 @@ dsc = "Platforms/Xiaomi/rodinPkg/rodin.dsc"
 # 所以产物目录是 {target}_CLANGPDB（不是 Silicium 自带 build_uefi.py 的 CLANGDWARF）。
 fd = "Build/rodinPkg/{target}_CLANGPDB/FV/SILICIUM_UEFI.fd"
 preflight = []
-# linux.yml 的 checkout 不带 submodules；Mu 系列包（PcBdsPkg/OemPkg）与
-# Mu_Basecore 都在子模块里，构建前必须初始化，否则 DSC 解析直接失败。
-submodules = ["Mu_Basecore", "Common/Mu", "Common/Mu_OEM_Sample"]
+# linux.yml 的 checkout 不带 submodules；PcBdsPkg/OemPkg 在 mu_plus / OEM 示例
+# 子模块里，构建前必须初始化，否则 DSC 解析直接失败。
+submodules = ["Common/Mu", "Common/Mu_OEM_Sample"]
 patches = []
 # EDK2 的 !include / 模块路径会沿 PACKAGES_PATH 查找（MultipleWorkspace.getWs）：
 # "SiliciumPkg/SiliciumPkg.dsc.inc"、"rodinPkg/Include/APRIORI.inc" 都靠这些条目解析。
-# 顺序即优先级：先 uefi 内的 Mu_Basecore，最后才是流水线自带的 {edk2}（同名包去重）。
+# 不用 uefi 内的 Mu_Basecore 子模块：流水线只做一级 submodule update，嵌套的
+# libfdt/brotli 不会初始化；{edk2} 是流水线 fetch 的 mu_basecore（带全套子模块）。
 packages = [
     "{uefi}",
     "{uefi}/Platforms/Xiaomi",
     "{uefi}/Common/Mu",
     "{uefi}/Common/Mu_OEM_Sample",
-    "{uefi}/Mu_Basecore",
     "{uefi}/Silicon/MediaTek",
     "{uefi}/Silicon/Silicium",
     "{tree}/package",
+    "{tree}/drivers/DarwinBoot",
     "{edk2}",
 ]
 
