@@ -39,16 +39,19 @@
 - [ ] DSC 压缩 + VDO 模式与 rothko CMD 模式的差异评估
 
 ## 5. 触控 / 按键
-- [x] 触控：xiaomi-touch 框架，xiaomi,touch-spi，SPI 15 MHz，interrupt 0x9（dtbo）；面板双供应商 phandle 关联
-- [ ] 具体 IC 型号（Goodix/Novatek?）与 SPI 总线号
+- [x] 触控：xiaomi-touch 框架，SPI 15 MHz；**Goodix + Focaltech 双驱动并存**（lk 内嵌 goodix,irq-gpio / focaltech,irq-gpio 属性组；goodix_firmware_rodin、goodix_cfg_group_rodin 固件名）（来源：lk.img 字符串 + dtbo）
+- [x] 指纹：Goodix（mediatek,goodix-fp）
+- [ ] 具体批次用哪颗 IC（真机日志确认）；SPI 总线号
 - [ ] 三颗实体按键路由（PMIC MT6363 pwrkey/homekey?）
 
 ## 6. 无线 / USB / 音频 / 电源（后期）
 - [x] Wi-Fi/BT/GNSS 固件三件：connsys_wifi/bt/gnss.img（两个包都有）
-- [ ] PMIC：MT6685 (SPMI@0x1cc04000) + MT6363（来源 vendor_boot DTB）
+- [x] PMIC：MT6685 (SPMI@0x1cc04000) + MT6363（来源 vendor_boot DTB）
 - [x] 电量计 TI bq28z610 @0x55、充电 sc858x@0x6F + bq25985@0x6E、120W（dtbo）
 - [x] 音频：aw882xx 智能功放 ×2 @0x34/0x35（dtbo）
-- [x] NFC：NXP nq-nci；指纹：xiaomi-fp SPI；振动：aw8697/sih6887（dtbo）
+- [x] NFC：NXP nq-nci；指纹：Goodix SPI；振动：aw8697/sih6887（dtbo）
+- [x] FDVFS 平台块：fdvfs@0x0c068200（mediatek,fdvfs；VCore/DDR 请求链与 rothko 同格式）（来源：lk.img 内嵌 DT 引用）
+- [x] LK 支持 ramoops.mem_address/mem_size/pmsg_size/console_size 内核参数（来源：lk.img）
 - [ ] USB 控制器与 PHY（日志通道依赖它）
 - [ ] 基带：建议排除并记录 not-applicable（modem.img 200 MiB x2 存在于分区表）
 

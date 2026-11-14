@@ -98,13 +98,13 @@ id = "input"
 status = "planned"
 components = []
 paths = ["kits/**", "drivers/**"]
-inputs = ["触控 IC 型号/总线/固件、按键路由"]
+inputs = ["触控已确认：Goodix + Focaltech 双方案（xiaomi_touch 框架，SPI 15 MHz），goodix_firmware_rodin 固件名存在于 lk；按键路由待确认"]
 configuration = ["TODO"]
 procedure = ["TODO"]
 findings = ["TODO"]
 completion = ["触点映射到屏幕，多点 ID 稳定，释放事件到达，按键产生 HID 报告"]
-limits = ["Turbo 4 触控 IC 型号未知"]
-next_action = ["确认触控 IC 与总线"]
+limits = ["批次 IC 选择待真机日志确认"]
+next_action = ["确认 SPI 总线号与固件文件位置，参考 rothko GoodixBerlin9916K 组件"]
 evidence = []
 
 [[area]]
@@ -168,13 +168,13 @@ id = "power"
 status = "planned"
 components = []
 paths = []
-inputs = ["FDVFS 表、充电 IC/电量计型号、PMIC"]
+inputs = ["FDVFS 平台块 fdvfs@0x0c068200（mediatek,fdvfs）、VCore/DDR 请求链格式与 rothko 同；充电 IC/电量计已盘点"]
 configuration = ["TODO"]
 procedure = ["TODO"]
 findings = ["TODO"]
 completion = ["电源控制与电量读数与观察一致"]
 limits = []
-next_action = ["确认 PMIC/电量计型号"]
+next_action = ["对照 rothko MtkCpuFreq 写 rodin 固定启动频率请求；确认 PMIC 电源键/按键路由"]
 evidence = []
 
 [[area]]

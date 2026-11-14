@@ -12,7 +12,9 @@ Xiaomi Redmi Turbo 4（天玑 8400-Ultra）的 UniXNU 移植工作区。
    ./unixnu defconfig turbo4_defconfig -D ../UniXNU-turbo4 && ./unixnu fetch && ./unixnu status --json
 3. 参考 [Port a device](https://unixnu.com/porting/steps) 与 [rothko 移植记录](https://unixnu.com/devices/rothko)
 
-## 安全提示
-- 任何真机操作前全分区备份
-- 用 `fastboot boot` 一次性启动，不用 `fastboot flash`
+## 安全提示（本项目硬性规则）
+- **永不刷写 lk / preloader / vbmeta 分区** —— 本设备靠解锁版 lk 维持解锁状态，刷原版 lk 会回锁
+- 解析固件只针对 /sdcard 上的 ROM 包文件副本（只读），不对设备做任何写入
+- 真机调试一律用 `fastboot boot`（一次性，不写分区），稳定后才考虑写 boot_a
+- 写 boot 分区前全分区备份（尤其 boot/vbmeta/preloader/lk/modem）
 - 参考记录里 rothko 曾因 UFS 参考时钟设置错误发生事故
