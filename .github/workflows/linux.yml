@@ -1,0 +1,158 @@
+name: Linux full build
+
+# rodin 移植的完整构建链（Linux runner）。官方 macOS build workflow（在 UniXNU 主仓库）只出日志；
+# 本 workflow 补齐 package / firmware / bootimg 步骤并上传日志。
+# 注意：fork/修改后如仓库公开，请遵守 UniXNU 的输入物规则——不上传 IPSW 成员、内核缓存等派生自
+# Apple 软件的二进制，只上传文本日志。
+
+on:
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: Build steps
+        type: choice
+        options:
+          - kernel
+          - kernel package
+          - full (kernel package firmware bootimg)
+        default: kernel
+      uefi_repository:
+        description: UEFI firmware repository as owner/name (needed for firmware/bootimg)
+        required: false
+        default: ""
+      uefi_ref:
+        description: UEFI repository ref
+        required: false
+        default: main
+      ipsw_url:
+        description: IPSW URL override (empty uses board.toml)
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-full-build-${{ github.ref }}-${{ inputs.steps }}
+  cancel-in-progress: false
+
+env:
+  UNIXNU_DEVICE: ${{ github.workspace }}/device
+  UNIXNU_IPSW: ${{ inputs.ipsw_url }}
+  DEFCONFIG: rodin_defconfig
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      UNIXNU_UEFI: ${{ github.workspace }}/uefi
+    steps:
+      - name: Check the inputs
+        run: |
+          fail() { echo "::error::$1"; exit 1; }
+          case "${{ inputs.steps }}" in
+            "kernel"|"kernel package"|"full (kernel package firmware bootimg)") ;;
+            *) fail "unknown steps: ${{ inputs.steps }}" ;;
+          esac
+          if [[ "${{ inputs.steps }}" == *firmware* && -z "${{ inputs.uefi_repository }}" ]]; then
+            fail "steps with firmware need uefi_repository"
+          fi
+
+      - name: Check out this device repository
+        uses: actions/checkout@v4
+        with:
+          path: device
+
+      - name: Check out UniXNU
+        uses: actions/checkout@v4
+        with:
+          repository: UniXNU/UniXNU
+          path: unixnu
+
+      - name: Check out the UEFI firmware repository
+        if: inputs.uefi_repository != ''
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.uefi_repository }}
+          ref: ${{ inputs.uefi_ref }}
+          path: uefi
+          token: ${{ github.token }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install the Linux toolchain (builds clang; takes a while)
+        working-directory: unixnu
+        run: |
+          sudo ./scripts/linux/setup-toolchain.py --print-packages
+          sudo ./scripts/linux/setup-toolchain.py
+          ./scripts/linux/setup-toolchain.py --check
+
+      - name: Resolve the build
+        working-directory: unixnu
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          ./unixnu defconfig "$DEFCONFIG" -D "$UNIXNU_DEVICE"
+          ./unixnu fetch -D "$UNIXNU_DEVICE"
+          ./unixnu status --json -D "$UNIXNU_DEVICE"
+          ./unixnu tree -D "$UNIXNU_DEVICE"
+
+      - name: Build kernel
+        id: kernel
+        working-directory: unixnu
+        run: ./unixnu build kernel -D "$UNIXNU_DEVICE"
+
+      - name: Build package (EDK II UniXNU.efi)
+        if: contains(inputs.steps, 'package') || contains(inputs.steps, 'full')
+        id: package
+        working-directory: unixnu
+        run: ./unixnu build package -D "$UNIXNU_DEVICE"
+
+      - name: Build firmware
+        if: contains(inputs.steps, 'full')
+        id: firmware
+        working-directory: unixnu
+        run: ./unixnu build firmware -D "$UNIXNU_DEVICE"
+
+      - name: Pack boot image
+        if: contains(inputs.steps, 'full')
+        id: bootimg
+        working-directory: unixnu
+        run: |
+          ./unixnu build payload -D "$UNIXNU_DEVICE" || echo "payload needs device inputs (trust cache / data seed); skipping bootimg if it fails"
+          ./unixnu bootimg -D "$UNIXNU_DEVICE"
+
+      - name: Collect text logs (sanitized)
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/logs"
+          work=$(python3 - <<'PY'
+          import json
+          print(json.load(open('unixnu/out/state.json')).get('device', ''))
+          PY
+          )
+          # 上传全部文本日志；二进制产物不上传
+          find unixnu/out -type f -name '*.log' -exec cp {} "$RUNNER_TEMP/logs/" \; 2>/dev/null || true
+          cp unixnu/out/state.json "$RUNNER_TEMP/logs/state.json" 2>/dev/null || true
+          echo "staged: $(ls "$RUNNER_TEMP/logs" | wc -l) files"
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodin-linux-logs-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/logs/*
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Remove proprietary inputs
+        if: always()
+        run: |
+          rm -rf unixnu/out/ipsw unixnu/out/feeds device/.cache/firmware unixnu/out/*/tree/.cache/firmware
