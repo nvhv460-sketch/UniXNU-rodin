@@ -56,22 +56,23 @@ config_fragments = ["arch:configs/common.config", "soc:configs/mt6989.config", "
 # 补丁顺序：device 排在 os 之前 —— zzz-boot-progress（os series）依赖
 # sheng-platform-power.patch 先插入 XNU_SHENG_PMGR 调用块（见 patches/xnu/series 注释）。
 patch_series = ["arch:patches/xnu/series", "soc:patches/xnu/series", "device:patches/xnu/series", "os:patches/xnu/series"]
-# TODO: 起步先抄 rothko 的 archives 列表（drivers 需先在你的仓库存在），按适配进度增删：
-# archives = [
-#   "build-corecrypto-14.py",
-#   "build-corecrypto-14.py --namespace",
-#   "build-arm-driver.py ArmDTPlatform",
-#   "build-arm-driver.py ArmCpu",
-#   "build-arm-driver.py NativeAES",
-#   "build-arm-driver.py NativeMtkUfs",
-#   "build-arm-driver.py NativeRamBlock",
-#   "build-arm-driver.py NativeHidInput",
-#   "build-arm-driver.py NativeMobileDisplay",
-#   "build-arm-driver.py NativeKeyStoreEvents",
-#   "build-arm-driver.py MtkCpuFreq",
-#   "build-native-aes-bindings.py",
-#   "build-libpthread-kernel.py",
-# ]
+# 归档配方（整体替换 arch profile 的列表，故先重复其全量，再追加本板组件）。
+# kernel 阶段组件必须显式出现：RamBlock、AppleKeyStoreState（GopFramebuffer/VerifiedRoot
+# 是 embedded 阶段，无需条目）。bootstrap pass 会故意不带归档链接一次，链接失败属预期。
+archives = [
+  "build-corecrypto-14.py",
+  "build-corecrypto-14.py --namespace",
+  "component:ArmDTPlatform",
+  "component:ArmCpu",
+  "component:SoftwareAES",
+  "build-software-aes-bindings.py",
+  "build-mockfs-fixture.py",
+  "build-libpthread-kernel.py",
+  "component:RamBlock",
+  "component:AppleKeyStoreState",
+  # TODO 按适配进度追加：NativeMtkUfs / NativeAES / NativeMobileDisplay /
+  # NativeHidInput / 触控 IC 组件 / MtkCpuFreq 的 component: 或 build-* 条目
+]
 
 # ---- Donor 内核缓存的 prelink 契约（与 rothko 同一 21H461 kernelcache，可复用）----
 [kernel.prelink]
