@@ -53,7 +53,9 @@ windows = [
 [kernel]
 defconfig = "rodin_defconfig"
 config_fragments = ["arch:configs/common.config", "soc:configs/mt6989.config", "os:configs/ipados.config"]
-patch_series = ["arch:patches/xnu/series", "soc:patches/xnu/series", "os:patches/xnu/series", "device:patches/xnu/series"]
+# 补丁顺序：device 排在 os 之前 —— zzz-boot-progress（os series）依赖
+# sheng-platform-power.patch 先插入 XNU_SHENG_PMGR 调用块（见 patches/xnu/series 注释）。
+patch_series = ["arch:patches/xnu/series", "soc:patches/xnu/series", "device:patches/xnu/series", "os:patches/xnu/series"]
 # TODO: 起步先抄 rothko 的 archives 列表（drivers 需先在你的仓库存在），按适配进度增删：
 # archives = [
 #   "build-corecrypto-14.py",

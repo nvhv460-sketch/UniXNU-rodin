@@ -1,0 +1,4 @@
+# 设备级 XNU 补丁。soc 层（mt6989-common）series 为空，OS series 的 zzz-boot-progress
+# 依赖 sheng-platform-power 先在 bsd_init.c 插入 XNU_SHENG_PMGR 调用块；
+# board.toml 把 device series 排在 os 之前补上这一环（alioth 由 sm8550 soc 层提供）。
+sheng-platform-power.patch
