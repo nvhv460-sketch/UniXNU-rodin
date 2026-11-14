@@ -19,7 +19,7 @@ on:
       uefi_repository:
         description: UEFI firmware repository as owner/name (needed for firmware/bootimg)
         required: false
-        default: ""
+        default: "nvhv460-sketch/Silicium-Rothko"
       uefi_ref:
         description: UEFI repository ref
         required: false
