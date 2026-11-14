@@ -176,8 +176,10 @@ soc = "rodin"
 chip_id = "0x6899"  # MT6899 hwcode：efuse 0x044 + dmesg "get chipid 0x6899:..."（2026-11-14 真机实测）
 # TODO: owned_memory = 目标让 XNU 独占的内存大小；12 GiB 版建议 0x200000000（8 GiB）起步
 owned_memory_size = "0x200000000"
-# TODO: root_match 卷 UUID —— 安装/userdata 步骤后从 userdata-root.json 填入
-root_match_volume_uuid = "TODO"
+# root_match 卷 UUID：schema 2 生成器会解析成 UUID 写进 /chosen root-matching。
+# 还没有安装好的 userdata 卷（userdata-root.json 未生成），先留空跳过；
+# 一旦 userdata 镜像做出，填入其卷 UUID。空值 = 不做 root 匹配。
+root_match_volume_uuid = ""
 # 已确认：MPIDR 亲和值与 rothko 相同（vendor_boot DTB cpus 节点，4+3+1 三簇，PSCI 启动）
 cpu_regs = "0x0,0x100,0x200,0x300,0x400,0x500,0x600,0x700"
 psci_method = "smc"
