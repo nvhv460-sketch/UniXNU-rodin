@@ -14,6 +14,7 @@ on:
         options:
           - kernel
           - kernel package
+          - firmware (package firmware)
           - full (kernel package firmware bootimg)
         default: kernel
       uefi_repository:
@@ -56,7 +57,7 @@ jobs:
         run: |
           fail() { echo "::error::$1"; exit 1; }
           case "${{ inputs.steps }}" in
-            "kernel"|"kernel package"|"full (kernel package firmware bootimg)") ;;
+            "kernel"|"kernel package"|"firmware (package firmware)"|"full (kernel package firmware bootimg)") ;;
             *) fail "unknown steps: ${{ inputs.steps }}" ;;
           esac
           if [[ "${{ inputs.steps }}" == *firmware* && -z "${{ inputs.uefi_repository }}" ]]; then
@@ -105,18 +106,19 @@ jobs:
           ./unixnu tree -D "$UNIXNU_DEVICE"
 
       - name: Build kernel
+        if: contains(inputs.steps, 'kernel') || contains(inputs.steps, 'full')
         id: kernel
         working-directory: unixnu
         run: ./unixnu build kernel -D "$UNIXNU_DEVICE"
 
       - name: Build package (EDK II UniXNU.efi)
-        if: contains(inputs.steps, 'package') || contains(inputs.steps, 'full')
+        if: contains(inputs.steps, 'package') || contains(inputs.steps, 'firmware') || contains(inputs.steps, 'full')
         id: package
         working-directory: unixnu
         run: ./unixnu build package -D "$UNIXNU_DEVICE"
 
       - name: Build firmware
-        if: contains(inputs.steps, 'full')
+        if: contains(inputs.steps, 'firmware') || contains(inputs.steps, 'full')
         id: firmware
         working-directory: unixnu
         run: ./unixnu build firmware -D "$UNIXNU_DEVICE"
