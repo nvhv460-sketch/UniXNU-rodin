@@ -1,0 +1,10 @@
+# Required firmware inputs: relative path | source | SHA-256 | consumer
+# 从 Turbo 4 的官方 fastboot 线刷包提取（小米 unlock 后可下载对应机型包）。
+# 典型需要（联发科平台，具体路径以 ROM 内结构为准）：
+#   preloader          | ... | ... | UEFI preflight / 启动链参考
+#   lk/lk2nd (littlekernel) | ... | ... | UEFI 平台初始化参考
+#   dtbo.img           | ... | ... | 外设（面板/触控/按键）资源提取
+#   面板固件/参数       | ... | ... | 显示初始化
+#   触控固件           | ... | ... | 触控 IC 初始化（gen-touch-firmware.py 消费）
+#   wifi/bluetooth 固件 | ... | ... | 后期网络适配
+# 注意：任何固件文件都不入库，此清单只记录来源与哈希。

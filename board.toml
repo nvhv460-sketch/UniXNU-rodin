@@ -1,0 +1,161 @@
+schema_version = 2
+
+[board]
+name = "rodin"
+soc = "MT6899"
+soc_source = "mt6989"               # 起步复用 mt6989-common（CPU/PSCI/GICv3/13MHz timer 已实测一致），差异逐步上移
+os_profile = "ipados-17.7.11-21H461"
+description = "Xiaomi Redmi Turbo 4 (rodin, MediaTek Dimensity 8400-Ultra / MT6899)"
+kit = "rodin"
+example = false                     # 占位未填完前保持 true；构建命令会拒绝 example 仓库
+
+[components]
+include = [
+  "ArmDTPlatform", "ArmCpu", "SoftwareAES", "RamBlock",
+  "AppleKeyStoreState", "VerifiedRoot", "XnuPrelink", "DarwinBoot",
+  "GopFramebuffer",
+  # TODO 按适配进度追加：NativeMtkUfs / NativeAES / NativeMobileDisplay /
+  # NativeHidInput / 触控 IC 组件 / MtkCpuFreq ...
+]
+
+[device_tree]
+source = "device:dts/rodin.dts"
+include_dirs = ["soc:dts"]
+
+# ---- Donor 固件（与 rothko 相同的 iPadOS 17.7.11 / 21H461，iPad7,1 donor）----
+[ipsw]
+url = "https://updates.cdn-apple.com/2025SpringFCS/fullrestores/122-77166/DCA6CFE8-90E9-4B92-880D-3DE171798E40/iPad_Pro_HFR_17.7.11_21H461_Restore.ipsw"
+product = "iPad7,1"
+version = "17.7.11"
+build = "21H461"
+device_class = "j120ap"
+chip_id = 0x8011
+board_id = 12
+fetch = ["KernelCache", "DeviceTree", "StaticTrustCache", "Cryptex1,SystemTrustCache"]
+
+[ipsw.sha256]
+"044-76040-038.dmg" = "3f99b859c9728379110b66657c7b15285bcb1925ad8b5726542e2cdcf8b1028d"
+"044-76034-038.dmg" = "b4908cde41d23e6bc05e6af51a2c9eeb00cf0f863a6a18b1600c96a3fd70414f"
+
+# ---- 用户数据分区几何 ----
+# 来源：rodin_images_OS3.0.305.0.WOJCNXM_16.0/images/PGPT_UFS（4K LBA）
+# super 止于 LBA 3407871；scatter 给出 userdata 起始字节 0x354300000 → 4K LBA 0xD50C0。
+# last_lba 取决于存储容量（256G/512G 两版本，MI_FFU 三个厂商固件），装机时以实际 GPT 为准。
+[userdata]
+first_lba = 0xD50C0
+# last_lba = TODO  # 256G 版 / 512G 版不同；用 unpack 后真机 GPT 的 userdata 区间填
+lba_bytes = 4096
+windows = [
+  { name = "OS", component = "OS" },
+  { name = "SystemOS", component = "Cryptex1,SystemOS" },
+]
+
+[kernel]
+defconfig = "rodin_defconfig"
+config_fragments = ["arch:configs/common.config", "soc:configs/mt6989.config", "os:configs/ipados.config"]
+patch_series = ["arch:patches/xnu/series", "soc:patches/xnu/series", "os:patches/xnu/series", "device:patches/xnu/series"]
+# TODO: 起步先抄 rothko 的 archives 列表（drivers 需先在你的仓库存在），按适配进度增删：
+# archives = [
+#   "build-corecrypto-14.py",
+#   "build-corecrypto-14.py --namespace",
+#   "build-arm-driver.py ArmDTPlatform",
+#   "build-arm-driver.py ArmCpu",
+#   "build-arm-driver.py NativeAES",
+#   "build-arm-driver.py NativeMtkUfs",
+#   "build-arm-driver.py NativeRamBlock",
+#   "build-arm-driver.py NativeHidInput",
+#   "build-arm-driver.py NativeMobileDisplay",
+#   "build-arm-driver.py NativeKeyStoreEvents",
+#   "build-arm-driver.py MtkCpuFreq",
+#   "build-native-aes-bindings.py",
+#   "build-libpthread-kernel.py",
+# ]
+
+# ---- Donor 内核缓存的 prelink 契约（与 rothko 同一 21H461 kernelcache，可复用）----
+[kernel.prelink]
+tool = "kits/XnuPrelink/emit_prelink.py"
+kernel = "build/xnu/ios-obj/DEVELOPMENT_ARM64_BCM2837/mach.development.bcm2837.unstripped.noctf"
+kernelcache_sha256 = "f18b4df865405f2a287b84977d7aca745e056d656d9fc9df1662970ce2969de7"
+slide = "-0x1000000"
+early_security_init = "com.apple.driver.AppleMobileFileIntegrity=0xfffffff005ab4ae0"
+roots = [
+  "com.apple.driver.AppleARMPlatform",
+  "com.apple.filesystems.apfs",
+  "com.apple.driver.AppleMobileFileIntegrity",
+  "com.apple.iokit.IOStorageFamily",
+  "com.apple.iokit.IOHIDFamily",
+  "com.apple.iokit.IOHIDEventDriver",
+  "com.apple.kec.corecrypto",
+  "com.apple.security.sandbox",
+]
+extra_args = []
+
+[firmware]
+# TODO: 你的 UEFI 固件仓库（从 Silicium-Rothko fork 后改）。填写后取消注释。
+# external_repository = "git@github.com:<你的用户名>/Silicium-Rodin.git"
+# config = "rodin"
+# dsc = "Platforms/Xiaomi/rodinPkg/rodin.dsc"
+# fd = "Build/rodinPkg/{target}_CLANGDWARF/FV/SILICIUM_UEFI.fd"
+preflight = []
+submodules = []
+patches = []
+packages = ["{uefi}", "{tree}/package", "{edk2}"]
+
+# TODO: 按你的固件仓库实际 defines 填写
+# [firmware.defines]
+# ENABLE_SECUREBOOT = "0"
+# DEVICE_MODEL = "0"
+# MEMORY_PROTECTION = "TRUE"
+# SHIP_MODE = "FALSE"
+
+[bootimg]
+# 官方打包器提供与 stock 兼容的 DTB 与 AVB 信封；
+# 若采用固件预生成 DTB，则由 preflight 脚本构建并在此填写 dtb 路径。
+
+[payload]
+volume = "UNIXNU"
+size_mib = 56
+loader = "firmware"
+title = "rodin UniXNU"
+# TODO: rodin 有 12/16 GiB 两版本；以真机 lk mblock 日志为准（0x300000000 = 12 GiB）
+dram_size = "0x300000000"
+panic_screen = false
+# TODO: trust cache hash —— 首次 payload 构建后由输出/报告填入，或使用 --owner-trust-cache
+trust_cache_sha256 = []
+timeout = 3
+kernel_args = [
+  "-v", "-enable_kprintf_spam", "serial=0", "debug=0x14e", "cpus=8",
+  "kt_fixed_zones=120", "offline-apfs-load=1", "panic_on_crash_disabled=1",
+  "sheng-data-persist=0", "yunluo-read-verify=0", "-apfs_shared_datavolume",
+  "sheng-aks=1", "-no_slto_panic", "ml-timeout-lock-panic-scale=40",
+  "armcpu-diagnostics=1",
+  # TODO: 以下为 rothko 移植期的调试/兼容开关，rodin 需逐项验证后再保留：
+  "sheng-smp=1", "armcpu-self-ipi=1", "armcpu-mmio-ipi=1",
+  "offline-legacy-register=1", "offline-legacy-gop=1",
+  "offline-legacy-unit-scale=2", "offline-legacy-pm=1",
+  "offline-legacy-validate=1", "offline-legacy-transfer=1",
+  "offline-legacy-cpu-present=1", "offline-legacy-phase=4",
+  "offline-legacy-retire=1",
+]
+
+[payload.adt]
+# TODO: ADT 生成脚本需按 rodin 硬件写一份（参考 rothko 的 scripts/make-rothko-adt.py）
+tool = "scripts/make-rodin-adt.py"
+soc = "rodin"
+chip_id = "0x8011"
+# TODO: owned_memory = 目标让 XNU 独占的内存大小；12 GiB 版建议 0x200000000（8 GiB）起步
+owned_memory_size = "0x200000000"
+# TODO: root_match 卷 UUID —— 安装/userdata 步骤后从 userdata-root.json 填入
+root_match_volume_uuid = "TODO"
+# 已确认：MPIDR 亲和值与 rothko 相同（vendor_boot DTB cpus 节点，4+3+1 三簇，PSCI 启动）
+cpu_regs = "0x0,0x100,0x200,0x300,0x400,0x500,0x600,0x700"
+psci_method = "smc"
+packed_data_ramdisk = true
+ipad_identity = true
+unique_chip_id = "required"
+
+[package]
+unixnu = "../UniXNU"
+
+[package.defconfig]
+"ipados-17.7.11-21H461" = "rodin_defconfig"

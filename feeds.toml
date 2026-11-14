@@ -1,0 +1,27 @@
+# 模块来源解析（Format 2）。每个来源必须钉住 commit。
+#
+# soc 层：起步先复用 rothko 拆出的 MT6989 公共层（CPU/PSCI/GICv3/13MHz 定时器）。
+# 天玑 8400-Ultra 与 9300 同代，CPU 拓扑不同（8xA725 vs 4xX4+4xA720），
+# CPU/topology 相关资源迟早要 fork 出 UniXNU-mt6999-common（或等确认芯片编号后命名）。
+[[source]]
+name = "mt6989"
+kind = "soc"
+git = "https://github.com/woaphone/UniXNU-mt6989-common"
+commit = "1e38ac7b45376680024d5da1217a9d6d7d463215"
+
+# TODO: rothko 的板载驱动（NativeMtkUfs 等）走本地路径；
+# 你把驱动 fork/复制进本仓库 drivers/ 后，按同样格式加 [[source]]，
+# name = "NativeMtkUfs", kind = "driver", path = "drivers/NativeMtkUfs"。
+
+# xnu 参考源：woaphone 的 xnu-mtk（含 MTK 平台改动，分支 rothko）。
+# TODO: 一旦你的 XNU 改动与 rothko 分道，fork 成自己的分支并更新 pin。
+[[source]]
+name = "xnu"
+kind = "refer"
+git = "https://github.com/woaphone/xnu-mtk.git"
+ref = "rothko"
+commit = "fd4edc747395525a914987bb88f063b5e549ecc7"
+darwin = "23.6.0"
+version = "10063.141.1"
+driverkit_tag = "xnu-10063.121.3"
+trustcache_tag = "xnu-8796.101.5"

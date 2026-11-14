@@ -1,0 +1,206 @@
+schema_version = 1
+
+[device]
+name = "rodin"
+soc = "MT6899"
+os_profile = "ipados-17.7.11-21H461"
+summary = "Xiaomi Redmi Turbo 4 (rodin, Dimensity 8400-Ultra / MT6899) port. Baseline: rothko (K70 Ultra, MT6989). Hardware inventory largely filled from HyperOS 3.0.305.0 package (PGPT_UFS / vendor_boot DTB / dtbo)."
+
+# 各区域记录：status = planned → implemented → host-verified → device-verified
+# 每条 finding / limit / next_action 都要写实际观察，不写推测。
+
+[[area]]
+id = "configuration"
+status = "planned"
+components = ["ArmDTPlatform", "ArmCpu", "SoftwareAES", "XnuPrelink", "DarwinBoot"]
+paths = ["board.toml", "feeds.toml", "configs/**"]
+inputs = ["SoC 型号确认、stock DTS、内存版本（见 docs/hardware-inventory.md）"]
+configuration = ["TODO: 填入 board.toml 字段、DTS 属性与 defconfig 值"]
+procedure = ["TODO: 记录实际执行的配置命令"]
+findings = ["TODO"]
+completion = ["所有 source pin 可解析；status 显示预期的覆盖与补丁顺序"]
+limits = ["硬件输入未收集"]
+next_action = ["按 docs/hardware-inventory.md 收集配置输入"]
+evidence = []
+
+[[area]]
+id = "firmware"
+status = "planned"
+components = []
+paths = ["proprietary-files.txt", "board.toml"]
+inputs = ["官方线刷包、UEFI fork（Silicium-Rothko 起点）、lk/preloader 日志"]
+configuration = ["TODO: 固件仓库、DSC/FD 路径、defines"]
+procedure = ["TODO: DeviceBuild/stuart 构建命令与结果"]
+findings = ["TODO"]
+completion = ["固件构建通过，进入 DarwinBoot，发布 framebuffer，保持内存契约"]
+limits = ["UEFI 仓库尚未创建"]
+next_action = ["从 Silicium-Rothko fork 出 turbo4 固件仓库"]
+evidence = []
+
+[[area]]
+id = "cpu"
+status = "planned"
+components = []
+paths = ["dts/**", "configs/**"]
+inputs = ["CPU 拓扑、GIC、计时器、PSCI —— 已实测：8 核 4+3+1 三簇，MPIDR 0x0..0x700，GIC500@0xc000000，timer 13 MHz，PSCI enable-method（vendor_boot DTB）"]
+configuration = ["board.toml cpu_regs=0x0,0x100,...,0x700（与 rothko 相同）；DTS timebase-frequency=13 MHz"]
+procedure = ["TODO: 真机记录 K1-K4/timer/IPI 标记"]
+findings = ["CPU 拓扑与 rothko 同构，mt6989-common 的 CPU/GIC/timer 资源预期可直接复用"]
+completion = ["每个启用的 CPU 到达 entry 检查点，timer/IPI 正常"]
+limits = ["频率/GDVFS 行为未验证（rothko 的 MtkCpuFreq 也只是固定请求）"]
+next_action = ["从 lk 日志确认 FDVFS 接口与内存映射"]
+evidence = []
+
+[[area]]
+id = "memory"
+status = "planned"
+components = []
+paths = ["dts/**"]
+inputs = ["lk mblock 运行时内存映射、保留区、SMMU"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["交接区全部记账，DMA 范围与缓存策略符合记录"]
+limits = ["stock 静态 memory 节点 ≠ 运行时映射（rothko 已验证此教训）"]
+next_action = ["抓取 lk mblock 日志"]
+evidence = []
+
+[[area]]
+id = "storage"
+status = "planned"
+components = []
+paths = ["board.toml", "drivers/**"]
+inputs = ["已实测：UFS host @0x112b0000 len 0x2a00（与 rothko 相同），PHY @0x112a0000 mt8183-ufsphy；GPT 已导出（92 分区，4K LBA）；LU 块大小待确认（预期 4096）"]
+configuration = ["board.toml userdata.first_lba=0xD50C0（scatter 0x354300000 / 4096）；last_lba 按容量版本待填"]
+procedure = ["TODO"]
+findings = ["GPT 解析自 PGPT_UFS：super LBA 524288..3407871；boot_a 269056..285439；lk_a 264960..269055；存在 pstore 133 MiB 分区"]
+completion = ["host/link/read/root/persistence 边界与清单一致，无越界写"]
+limits = ["UFS 参考时钟为高危项，需双重核对（rothko 事故）"]
+next_action = ["解 lk.img 字符串，找 UFS refclk/PHY 初始化参数"]
+evidence = []
+
+[[area]]
+id = "display"
+status = "planned"
+components = []
+paths = ["board.toml", "drivers/**"]
+inputs = ["面板 IC：o10_42_02_0a_dsc_vdo / o10_36_02_0b_dsc_vdo（dtbo，两款候选）；DSI0@0x1420a000 mt6899-dsi；背光 disp-leds 14-bit max 0x3fff；注意 DSC+VDO 与 rothko CMD 模式不同"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["已知帧几何/颜色正确，userland 显示与背光可控"]
+limits = ["分辨率与初始化序列待提取"]
+next_action = ["从 super.img vendor 分区解面板驱动参数，确认分辨率"]
+evidence = []
+
+[[area]]
+id = "input"
+status = "planned"
+components = []
+paths = ["kits/**", "drivers/**"]
+inputs = ["触控 IC 型号/总线/固件、按键路由"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["触点映射到屏幕，多点 ID 稳定，释放事件到达，按键产生 HID 报告"]
+limits = ["Turbo 4 触控 IC 型号未知"]
+next_action = ["确认触控 IC 与总线"]
+evidence = []
+
+[[area]]
+id = "gpu"
+status = "planned"
+components = []
+paths = []
+inputs = ["GPU 固件、SMMU stream、Android 参考实现"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["GPU 提交/映射/fence 正确，Metal 客户端渲染已知图像"]
+limits = ["预期长期开放；rothko 也未实现"]
+next_action = ["盘点 GPU 固件与 SMMU stream（勿混入 Qualcomm GMU 术语）"]
+evidence = []
+
+[[area]]
+id = "network"
+status = "planned"
+components = []
+paths = []
+inputs = ["Connsys 型号、总线、固件/校准文件"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["扫描、关联、地址配置、收发流量通过"]
+limits = ["预期长期开放"]
+next_action = ["盘点 Wi-Fi 芯片与固件"]
+evidence = []
+
+[[area]]
+id = "cellular"
+status = "planned"
+components = []
+paths = []
+inputs = ["范围决策：建议先记录 not-applicable"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["记录排除决策或完成调制解调器实现"]
+limits = ["建议初期排除基带"]
+next_action = ["记录 not-applicable 决策"]
+evidence = []
+
+[[area]]
+id = "audio"
+status = "planned"
+components = []
+paths = []
+inputs = ["音频 DSP/codec、路由"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["声明的路由完成播放/捕获"]
+limits = ["预期后期"]
+next_action = ["盘点音频 DSP/codec"]
+evidence = []
+
+[[area]]
+id = "power"
+status = "planned"
+components = []
+paths = []
+inputs = ["FDVFS 表、充电 IC/电量计型号、PMIC"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["电源控制与电量读数与观察一致"]
+limits = []
+next_action = ["确认 PMIC/电量计型号"]
+evidence = []
+
+[[area]]
+id = "packaging"
+status = "planned"
+components = []
+paths = ["scripts/**", "board.toml"]
+inputs = ["donor IPSW、kernelcache、trust cache、Data seed"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["内核+prelink 成功，payload 完整，boot 镜像符合格式与大小限制"]
+limits = ["payload/adt 多项 TODO"]
+next_action = ["编写 make-turbo4-adt.py（参考 make-rothko-adt.py）"]
+evidence = []
+
+[[area]]
+id = "diagnostics"
+status = "planned"
+components = []
+paths = ["docs/**", "unixnu.lock"]
+inputs = ["pmsg/ramoops、UEFI 日志导出"]
+configuration = ["TODO"]
+procedure = ["TODO"]
+findings = ["TODO"]
+completion = ["每个里程碑有可复现命令、匹配版本与可访问结果"]
+limits = []
+next_action = ["在固件集成时加入日志导出（QR/log ring）"]
+evidence = []

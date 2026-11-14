@@ -1,0 +1,12 @@
+# 生成的镜像与构建输出不入库
+out/
+*.img
+*.ipsw
+*.fd
+*.bin
+*.dmg
+# 本地构建配置
+unixnu.local.toml
+local.toml
+# 固件缓存
+.cache/

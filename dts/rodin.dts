@@ -1,0 +1,45 @@
+/dts-v1/;
+
+/include/ "mt6989.dtsi"
+
+/*
+ * UniXNU 板级描述：Redmi Turbo 4（rodin / MT6899，天玑 8400-Ultra）。
+ *
+ * 注意：这是 XNU ADT 生成器消费的"板级契约"记录，
+ * UEFI 固件用的 FDT 在独立的 uefi 仓库维护。
+ * 已填值来自 HyperOS 3.0.305.0 (WOJCNXM) 官方包解析：
+ *   images/PGPT_UFS、images/MT6899_Android_scatter.txt、
+ *   images/vendor_boot.img 内嵌 DTB、images/dtbo.img overlay。
+ */
+/ {
+    compatible = "xiaomi,rodin", "mediatek,mt6899";
+    model = "Xiaomi Redmi Turbo 4";
+
+    /* stock DT 占位为 0x40000000 起始 0x40000000；
+       运行时真实映射以 lk mblock 日志为准（rothko 教训），大小按 12/16 GiB 版本区分。 */
+    memory@40000000 {
+        device_type = "memory";
+        reg = <0x0 0x40000000 0x0 0x30000000>;
+    };
+
+    cpus {
+        cpu-count = <8>;   /* 4+3+1 三簇，PSCI enable-method，MPIDR 见 payload.adt.cpu_regs */
+        timebase-frequency = <13000000>;   /* vendor_boot DTB /timer clock-frequency 0x00c65d40 实测 */
+    };
+
+    soc {
+        compatible = "mediatek,mt6899";
+        /* UFS host：vendor_boot DTB /soc/ufshci@112b0000，len 0x2a00 —— 与 rothko 相同 */
+        ufs = <0x0 0x112b0000 0x0 0x00002a00>;
+        /* UFS PHY：/soc/ufsphy@112a0000（mt8183-ufsphy，mphy-ver 1） */
+        ufs-phy = <0x0 0x112a0000 0x0 0x00010000>;
+        /* GIC500 distributor 0xc000000；CPU interface 0xc400000 */
+        gic = <0x0 0x0c000000>;
+        /* 显示：DSI0 @ 0x1420a000（mt6899-dsi）；面板 o10_42_02_0a_dsc_vdo / o10_36_02_0b_dsc_vdo（DSC+VDO）。
+           TODO: 分辨率待从面板参数确认（预期 1220x2712）。 */
+        display = <1220 2712 32>;
+        /* 触控：xiaomi-touch 走 SPI（dtbo overlay，15 MHz）；总线号/IC 型号 TODO */
+        touch-spi = <TODO>;
+        /* PMIC：MT6685 (SPMI @0x1cc04000) + MT6363 (@4) */
+    };
+};
