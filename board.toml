@@ -103,22 +103,23 @@ roots = [
 extra_args = []
 
 [firmware]
-# TODO: 你的 UEFI 固件仓库（从 Silicium-Rothko fork 后改）。填写后取消注释。
-# external_repository = "git@github.com:<你的用户名>/Silicium-Rodin.git"
-# config = "rodin"
-# dsc = "Platforms/Xiaomi/rodinPkg/rodin.dsc"
-# fd = "Build/rodinPkg/{target}_CLANGDWARF/FV/SILICIUM_UEFI.fd"
+# UEFI 固件仓库：ChallengeThePeak/Silicium-Rothko 的 fork，rodinPkg 为本机板级包。
+external_repository = "https://github.com/nvhv460-sketch/Silicium-Rodin.git"
+config = "rodin"
+dsc = "Platforms/Xiaomi/rodinPkg/rodin.dsc"
+# UniXNU 主仓 scripts/unixnu/firmware.py 硬编码 -t CLANGPDB，
+# 所以产物目录是 {target}_CLANGPDB（不是 Silicium 自带 build_uefi.py 的 CLANGDWARF）。
+fd = "Build/rodinPkg/{target}_CLANGPDB/FV/SILICIUM_UEFI.fd"
 preflight = []
 submodules = []
 patches = []
 packages = ["{uefi}", "{tree}/package", "{edk2}"]
 
-# TODO: 按你的固件仓库实际 defines 填写
-# [firmware.defines]
-# ENABLE_SECUREBOOT = "0"
-# DEVICE_MODEL = "0"
-# MEMORY_PROTECTION = "TRUE"
-# SHIP_MODE = "FALSE"
+[firmware.defines]
+ENABLE_SECUREBOOT = "0"
+DEVICE_MODEL = "0"
+MEMORY_PROTECTION = "TRUE"
+SHIP_MODE = "FALSE"
 
 [bootimg]
 # 官方打包器提供与 stock 兼容的 DTB 与 AVB 信封；
