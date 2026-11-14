@@ -110,7 +110,7 @@ dsc = "Platforms/Xiaomi/rodinPkg/rodin.dsc"
 # UniXNU 主仓 scripts/unixnu/firmware.py 硬编码 -t CLANGPDB，
 # 所以产物目录是 {target}_CLANGPDB（不是 Silicium 自带 build_uefi.py 的 CLANGDWARF）。
 fd = "Build/rodinPkg/{target}_CLANGPDB/FV/SILICIUM_UEFI.fd"
-preflight = []
+preflight = ["scripts/prepare-dtb.py"]
 # linux.yml 的 checkout 不带 submodules；PcBdsPkg/OemPkg 在 mu_plus / OEM 示例
 # 子模块里，构建前必须初始化，否则 DSC 解析直接失败。
 submodules = ["Common/Mu", "Common/Mu_OEM_Sample"]
@@ -138,8 +138,10 @@ MEMORY_PROTECTION = "TRUE"
 SHIP_MODE = "FALSE"
 
 [bootimg]
-# 官方打包器提供与 stock 兼容的 DTB 与 AVB 信封；
-# 若采用固件预生成 DTB，则由 preflight 脚本构建并在此填写 dtb 路径。
+# 设备树由 firmware preflight（scripts/prepare-dtb.py）用 dtc 从
+# dts/rodin-stock.dts（stock vendor_boot 树的反编译件）编译到 tree 内 dtb/。
+# LK 把该树作为基础树合并 dtbo 覆盖后经 x0 交给固件。
+dtb = "dtb/rodin.dtb"
 
 [payload]
 volume = "UNIXNU"
