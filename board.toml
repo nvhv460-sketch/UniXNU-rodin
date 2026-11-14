@@ -103,8 +103,8 @@ roots = [
 extra_args = []
 
 [firmware]
-# UEFI 固件仓库：ChallengeThePeak/Silicium-Rothko 的 fork，rodinPkg 为本机板级包。
-external_repository = "https://github.com/nvhv460-sketch/Silicium-Rodin.git"
+# UEFI 固件仓库：nvhv460-sketch/Silicium-Rothko（已在此 fork 内新增 rodinPkg）
+external_repository = "https://github.com/nvhv460-sketch/Silicium-Rothko.git"
 config = "rodin"
 dsc = "Platforms/Xiaomi/rodinPkg/rodin.dsc"
 # UniXNU 主仓 scripts/unixnu/firmware.py 硬编码 -t CLANGPDB，
